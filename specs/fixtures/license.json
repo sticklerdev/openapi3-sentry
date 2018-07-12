@@ -1,0 +1,71 @@
+{
+  "api": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Contact",
+      "license": {
+        "name": "Apache 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+      },
+      "version": "1.0.0"
+    },
+    "paths": {}
+  },
+  "test": {
+    "description": "valid license is valid",
+    "result": { "isValid": true }
+  },
+  "patches": [
+    {
+      "operations": [{ "op": "remove", "path": "/info/license/name" }],
+      "test": {
+        "description": "api.info.license with missing name property is invalid",
+        "result": {
+          "isValid": false,
+          "errors": ["Missing required property at api/info/license - expected: name, actual: <none>"]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "replace", "path": "/info/license/name", "value": { "a": "b" } }],
+      "test": {
+        "description": "api.info.license with incorrect name property type is invalid",
+        "result": {
+          "isValid": false,
+          "errors": ["Invalid property type at api/info/license/name - expected: string, actual: object"]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "remove", "path": "/info/license/url" }],
+      "test": {
+        "description": "api.info.license without url property is valid",
+        "result": {
+          "isValid": true
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "replace", "path": "/info/license/url", "value": { "a": "b" } }],
+      "test": {
+        "description": "api.info.license with incorrect url property type is invalid",
+        "result": {
+          "isValid": false,
+          "errors": ["Invalid property type at api/info/license/url - expected: string, actual: object"]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "replace", "path": "/info/license/url", "value": "non uri-ref url" }],
+      "test": {
+        "description": "api.info.license with incorrect url property format is invalid",
+        "result": {
+          "isValid": false,
+          "errors": [
+            "Invalid format for property value at api/info/license/url - expected: uriref (e.g. https://www.apache.org/licenses/LICENSE-2.0.html), actual: non uri-ref url"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "api": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Api",
+      "version": "1.0.0"
+    },
+    "paths": {}
+  },
+  "test": {
+    "description": "minimum possible api is valid",
+    "result": { "isValid": true }
+  },
+  "patches": [
+    {
+      "operations": [{ "op": "remove", "path": "/openapi" }],
+      "test": {
+        "description": "api with missing openapi property is invalid",
+        "result": {
+          "isValid": false,
+          "errors": ["Missing required property at api - expected: openapi, actual: <none>"]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "remove", "path": "/info" }],
+      "test": {
+        "description": "api with missing info property is invalid",
+        "result": {
+          "isValid": false,
+          "errors": ["Missing required property at api - expected: info, actual: <none>"]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "remove", "path": "/paths" }],
+      "test": {
+        "description": "api with missing paths property is invalid",
+        "result": {
+          "isValid": false,
+          "errors": ["Missing required property at api - expected: paths, actual: <none>"]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "replace", "path": "/openapi", "value": { "a": "b" } }],
+      "test": {
+        "description": "api with incorrect openapi property type is invalid",
+        "result": {
+          "isValid": false,
+          "errors": ["Invalid property type at api/openapi - expected: string, actual: object"]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "replace", "path": "/openapi", "value": "4.0.0" }],
+      "test": {
+        "description": "api with incorrect major version for openapi property is invalid",
+        "result": {
+          "isValid": false,
+          "errors": [
+            "Invalid pattern for property value at api/openapi - expected: ^3\\.0\\.\\d(-.+)?$ (e.g. 3.0.1, 3.0.2-rc1), actual: 4.0.0"
+          ]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "replace", "path": "/openapi", "value": "3.1.0" }],
+      "test": {
+        "description": "api with incorrect minor version for openapi property is invalid",
+        "result": {
+          "isValid": false,
+          "errors": [
+            "Invalid pattern for property value at api/openapi - expected: ^3\\.0\\.\\d(-.+)?$ (e.g. 3.0.1, 3.0.2-rc1), actual: 3.1.0"
+          ]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "replace", "path": "/openapi", "value": "3.0.1" }],
+      "test": {
+        "description": "api with patch version for openapi property is valid",
+        "result": { "isValid": true }
+      }
+    },
+    {
+      "operations": [{ "op": "replace", "path": "/openapi", "value": "3.0.2-rc1" }],
+      "test": {
+        "description": "api with patch, pre-release version for openapi property is valid",
+        "result": { "isValid": true }
+      }
+    }
+  ]
+}

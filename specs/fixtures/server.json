@@ -1,0 +1,45 @@
+{
+  "api": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Server",
+      "version": "1.0.0"
+    },
+    "paths": {},
+    "servers": [
+      {
+        "url": "https://{username}.gigantic-server.com:{port}/{basePath}",
+        "description": "The production API server",
+        "variables": {
+          "username": {
+            "default": "demo",
+            "description": "this value is assigned by the service provider, in this example `gigantic-server.com`"
+          },
+          "port": {
+            "enum": ["8443", "443"],
+            "default": "8443"
+          },
+          "basePath": {
+            "default": "v2"
+          }
+        }
+      }
+    ]
+  },
+  "test": {
+    "description": "minimum possible servers is valid",
+    "result": { "isValid": true }
+  },
+  "patches": [
+    {
+      "operations": [{ "op": "remove", "path": "/servers/0" }],
+      "test": {
+        "description": "empty servers array is invalid",
+        "result": {
+          "isValid": false,
+          "errors": ["Invalid length for property value at api/servers - expected: min 1, actual: 0"]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+
+    "inlineSources": true,
+    "sourceMap": true,
+
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es2015",
+
+    "preserveConstEnums": true,
+    "removeComments": false,
+    "stripInternal": true,
+
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noFallthroughCasesInSwitch": true,
+    "suppressImplicitAnyIndexErrors": true
+  },
+  "include": ["lib/**/*.ts", "specs/**/*.ts"],
+  "exclude": ["node_modules"]
+}

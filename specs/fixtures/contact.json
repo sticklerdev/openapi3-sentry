@@ -1,0 +1,88 @@
+{
+  "api": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Contact",
+      "contact": {
+        "name": "API Support",
+        "url": "http://www.example.com/support",
+        "email": "support@example.com"
+      },
+      "version": "1.0.0"
+    },
+    "paths": {}
+  },
+  "test": {
+    "description": "valid contact is valid",
+    "result": { "isValid": true }
+  },
+  "patches": [
+    {
+      "operations": [
+        { "op": "remove", "path": "/info/contact/name" },
+        { "op": "remove", "path": "/info/contact/url" },
+        { "op": "remove", "path": "/info/contact/email" }
+      ],
+      "test": {
+        "description": "empty api.info.contact is valid",
+        "result": {
+          "isValid": true
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "replace", "path": "/info/contact/name", "value": { "a": "b" } }],
+      "test": {
+        "description": "api.info.contact with incorrect name property type is invalid",
+        "result": {
+          "isValid": false,
+          "errors": ["Invalid property type at api/info/contact/name - expected: string, actual: object"]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "replace", "path": "/info/contact/url", "value": { "a": "b" } }],
+      "test": {
+        "description": "api.info.contact with incorrect url property type is invalid",
+        "result": {
+          "isValid": false,
+          "errors": ["Invalid property type at api/info/contact/url - expected: string, actual: object"]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "replace", "path": "/info/contact/url", "value": "non uri-ref url" }],
+      "test": {
+        "description": "api.info.contact with incorrect url property format is invalid",
+        "result": {
+          "isValid": false,
+          "errors": [
+            "Invalid format for property value at api/info/contact/url - expected: uriref (e.g. http://www.example.com/support), actual: non uri-ref url"
+          ]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "replace", "path": "/info/contact/email", "value": { "a": "b" } }],
+      "test": {
+        "description": "api.info.contact with incorrect email property type is invalid",
+        "result": {
+          "isValid": false,
+          "errors": ["Invalid property type at api/info/contact/email - expected: string, actual: object"]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "replace", "path": "/info/contact/email", "value": "invalid email address" }],
+      "test": {
+        "description": "api.info.contact with incorrect email property format is invalid",
+        "result": {
+          "isValid": false,
+          "errors": [
+            "Invalid format for property value at api/info/contact/email - expected: email (e.g. support@example.com), actual: invalid email address"
+          ]
+        }
+      }
+    }
+  ]
+}
