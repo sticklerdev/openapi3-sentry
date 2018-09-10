@@ -88,7 +88,7 @@ export class JsonReferenceValidator {
 
   static dataPathToLocation(baseError: BaseError): FileRelativeError {
     const dataPath = baseError.dataPath;
-    const pathElements = jsonRefs.pathFromPtr('#' + dataPath);
+    const pathElements = jsonRefs.pathFromPtr(`#${dataPath}`);
 
     let currentFile = JsonReferenceValidator.resolutionResult.rootLocation;
     let currentFragment = '';
@@ -108,7 +108,7 @@ export class JsonReferenceValidator {
         currentPathElements = [];
         index = 0;
       } else {
-        currentFragment = currentFragment + '/' + pathElement;
+        currentFragment = `${currentFragment}/${pathElement}`;
         index = index + 1;
       }
     });
@@ -118,7 +118,7 @@ export class JsonReferenceValidator {
         JsonReferenceValidator.pathTranslator !== undefined
           ? JsonReferenceValidator.pathTranslator(JsonReferenceValidator.resolutionResult.rootLocation, currentFile)
           : currentFile,
-      filePath: '#' + currentFragment,
+      filePath: `#${currentFragment}`,
     };
   }
 
@@ -164,11 +164,11 @@ export class JsonReferenceValidator {
     const refs = JsonReferenceValidator.resolutionResult.refs;
     const schemaToValidateAgainst = parentSchema['validationSchema'];
     const refValidate = JsonReferenceValidator.ajv.getSchema(
-      'http://openapis.org/v3/schema.json' + schemaToValidateAgainst
+      `http://openapis.org/v3/schema.json${schemaToValidateAgainst}`
     );
     // If data is a result of reference
     let dataToValidate = data;
-    if (refs['#' + dataPath] !== undefined) {
+    if (refs[`#${dataPath}`] !== undefined) {
       const refErrors = [];
       if (data.$ref !== undefined) {
         const dataAddress = data.$ref.substring(1);
@@ -181,7 +181,7 @@ export class JsonReferenceValidator {
           keyword: 'jsonRefTypeValidation',
           params: {
             schema: schemaToValidateAgainst,
-            fqUri: refs['#' + dataPath].uri,
+            fqUri: refs[`#${dataPath}`].uri,
           },
         });
       }

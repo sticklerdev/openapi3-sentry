@@ -60,103 +60,34 @@ export function patchOneOfReferences(jsonSchema: object) {
     const referenceElementPath = referenceContainer
       .slice(0, referenceContainer.length - 1)
       .concat(referenceElementIndex);
-    // console.log(jsonPath.stringify(referenceContainer));
-    // console.log(jsonPathComponentsToJsonRef(referenceContainer));
     // Path to inlined type
     const inlinedElementPath = referenceContainer.slice(0, referenceContainer.length - 1).concat(inlinedElementIndex);
-    // console.log(jsonPath.stringify(inlinedElementPath));
-    // console.log(jsonPathComponentsToJsonRef(inlinedElementPath));
     // Path to actual container
     const containerElementPath = referenceContainer.slice(0, referenceContainer.length - 2);
-    // console.log(jsonPath.stringify(containerElementPath));
-    // console.log(jsonPathComponentsToJsonRef(containerElementPath));
 
     const ops: Operation[] = [
-      /*
       {
         op: 'add',
-        path: jsonPathComponentsToJsonRef(containerElementPath) + '/defOrRef',
-        value: {
-          $ref: '',
-        },
-      },
-      {
-        op: 'move',
-        from: jsonPathComponentsToJsonRef(inlinedElementPath),
-        path: jsonPathComponentsToJsonRef(containerElementPath) + '/defOrRef',
-      },
-      {
-        op: 'remove',
-        path: jsonPathComponentsToJsonRef(containerElementPath) + '/oneOf',
-      },
-*/
-      /*
-{
-        op: 'add',
-        path: jsonPathComponentsToJsonRef(referenceElementPath) + '/validateRef',
-        value: '',
-      },
-      {
-        op: 'copy',
-        from: jsonPathComponentsToJsonRef(inlinedElementPath) + '/$ref',
-        path: jsonPathComponentsToJsonRef(referenceElementPath) + '/validateRef',
-      },
-*/
-      /*
-{
-        op: 'move',
-        from: jsonPathComponentsToJsonRef(inlinedElementPath),
-        path: jsonPathComponentsToJsonRef(containerElementPath),
-      },
-*/
-      /*
-      {
-        op: 'add',
-        path: jsonPathComponentsToJsonRef(containerElementPath) + '/validateRef',
+        path: `${jsonPathComponentsToJsonRef(containerElementPath)}/validateDefOrRef`,
         value: {
           $data: '0',
         },
       },
       {
         op: 'add',
-        path: jsonPathComponentsToJsonRef(containerElementPath) + '/validationSchema',
+        path: `${jsonPathComponentsToJsonRef(containerElementPath)}/validationSchema`,
         value: {
           $ref: '',
         },
       },
       {
         op: 'move',
-        from: jsonPathComponentsToJsonRef(inlinedElementPath) + '/$ref',
-        path: jsonPathComponentsToJsonRef(containerElementPath) + '/validationSchema',
+        from: `${jsonPathComponentsToJsonRef(inlinedElementPath)}/$ref`,
+        path: `${jsonPathComponentsToJsonRef(containerElementPath)}/validationSchema`,
       },
       {
         op: 'remove',
-        path: jsonPathComponentsToJsonRef(containerElementPath) + '/oneOf',
-      },
-*/
-
-      {
-        op: 'add',
-        path: jsonPathComponentsToJsonRef(containerElementPath) + '/validateDefOrRef',
-        value: {
-          $data: '0',
-        },
-      },
-      {
-        op: 'add',
-        path: jsonPathComponentsToJsonRef(containerElementPath) + '/validationSchema',
-        value: {
-          $ref: '',
-        },
-      },
-      {
-        op: 'move',
-        from: jsonPathComponentsToJsonRef(inlinedElementPath) + '/$ref',
-        path: jsonPathComponentsToJsonRef(containerElementPath) + '/validationSchema',
-      },
-      {
-        op: 'remove',
-        path: jsonPathComponentsToJsonRef(containerElementPath) + '/oneOf',
+        path: `${jsonPathComponentsToJsonRef(containerElementPath)}/oneOf`,
       },
     ];
     applyPatch(jsonSchema, ops);
@@ -171,13 +102,7 @@ export function getOpenApi3Schema() {
   patchServers(openApi3Schema);
   return openApi3Schema;
 }
-/*
-function parents(obj: object, pathExpression: string, levels: number = 1) {
-  const allPathComponents = jsonPath.paths(obj, pathExpression);
-  console.log(allPathComponents);
-  return allPathComponents.slice(0, allPathComponents.length - levels);
-}
-*/
+
 function jsonPathComponentsToJsonRef(pathComponents: jsonPath.PathComponent[]) {
   const compClone = pathComponents.slice();
   compClone.splice(0, 1, '');

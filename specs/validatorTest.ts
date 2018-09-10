@@ -130,7 +130,7 @@ glob.sync('./fixtures/*.json', { cwd: __dirname }).forEach(fixture => {
       before(startServer);
       after(stopServer);
       const spec: Spec = require(fixture);
-      const apiToTest = require('./api/' + spec.apiFile);
+      const apiToTest = require(`./api/${spec.apiFile}`);
       testAndRecurseApi(spec.apiFile, apiToTest, spec);
     });
   }

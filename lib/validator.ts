@@ -73,55 +73,12 @@ export class OpenApi3ValidatorImpl implements OpenApi3Validator {
     // ajv.addMetaSchema(dataJson, '$id');
 
     this.addFormats(ajv);
-    // this.addKeywords(ajv);
     return ajv;
   }
 
   private addFormats(ajv: Ajv.Ajv) {
     // Add uri-reference as uriref because that is what schema.json uses
     ajv.addFormat('uriref', ajvFormats.full['uri-reference']);
-  }
-
-  private addKeywords(ajv: Ajv.Ajv) {
-    /*
-    ajv.addKeyword('pathsVarsUniqueAndBound', {
-      errors: true,
-      validate: pathsVarsUniqueAndBound,
-    });
-*/
-    /*
-    ajv.addKeyword('defOrRef', {
-      macro: defOrRef,
-      metaSchema: {
-        // $schema: 'http://json-schema.org/draft-04/schema#',
-        // $schema: 'sub_schema',
-        type: 'object',
-        properties: {
-          $ref: { type: 'string' },
-        },
-        additionalProperties: false,
-      },
-    });
-*/
-    /*  
-ajv.addKeyword('validateRef', {
-      errors: true,
-      validate: this.apiRefValidator.getValidator(ajv),
-      // $data: true,
-      metaSchema: {
-        $schema: 'http://json-schema.org/draft-04/schema#',
-        type: 'string',
-      },
-    });
-*/
-    /*
-    ajv.addKeyword('validationSchema', {
-      metaSchema: {
-        $schema: 'http://json-schema.org/draft-04/schema#',
-        type: 'string',
-      },
-    });
-*/
   }
 
   private buildHumanErrors(apiToValidate: any, errors: ValidationError[]): string[] {
@@ -203,7 +160,7 @@ ajv.addKeyword('validateRef', {
           message = this.buildMessage(
             'Invalid length for property value',
             jsonPath,
-            'min ' + params.limit,
+            `min ${params.limit}`,
             jsonValue.length
           );
           break;
@@ -273,7 +230,7 @@ ajv.addKeyword('validateRef', {
           break;
         }
         default: {
-          message = 'Unknown/unhandled error ' + error.keyword;
+          message = `Unknown/unhandled error ${error.keyword}`;
         }
       }
       return message;
@@ -281,7 +238,7 @@ ajv.addKeyword('validateRef', {
   }
 
   private buildMessage(error: string, source: string, expected?: string, actual?: string, examples?: string[]) {
-    const examplesStr = examples !== undefined && examples.length > 0 ? ' (e.g. ' + examples.join(', ') + ')' : '';
+    const examplesStr = examples !== undefined && examples.length > 0 ? ` (e.g. ${examples.join(', ')})` : '';
     return `${error} at ${source} - expected: ${expected === undefined ? '<none>' : expected}${examplesStr}, actual: ${
       actual === undefined ? '<none>' : actual
     }`;

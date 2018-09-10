@@ -15,7 +15,7 @@ function abbrComponents() {
     console.log(componentTypePath);
     const componentTypeRef = jsonPath.query(
       jsonSchema,
-      jsonPathComponentsToJsonPath(componentTypePath) + '.patternProperties..oneOf[1]["$ref"]'
+      `${jsonPathComponentsToJsonPath(componentTypePath)}.patternProperties..oneOf[1]["$ref"]`
     )[0];
     console.log(componentTypeRef);
     jsonPath.apply(jsonSchema, jsonPathComponentsToJsonPath(componentTypePath), () => {
