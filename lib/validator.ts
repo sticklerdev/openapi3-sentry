@@ -1,32 +1,62 @@
 import * as Ajv from 'ajv';
 import { get } from 'json-pointer';
-
 import jsonSchemaDraft04Json = require('./schema/json-schema-draft-04.json');
-// tslint:disable: import-name
-import schemaJson = require('./schema-short/schema.json');
-// import schemaJson = require('./schema-short/schema-abbr.json');
-// import schemaJson = require('./schema/gnostic.json');
+// import dataJson = require('./schema/data.json');
 
 // Import formats to get a handle on uri-reference
 const ajvFormats = require('ajv/lib/compile/formats');
-import { pathsVarsUniqueAndBound, pathsVarsUniqueAndBoundParams } from './keywords';
 
-export interface ValidationResult<R> {
-  isValid: boolean;
-  errors?: R[];
-}
+import { OpenApi3Validator, ApiValidationResult } from './interfaces';
+import { getOpenApi3Schema } from './openApi3Schema';
+import { PathValidator } from './pathValidator';
+import { JsonReferenceValidator } from './jsonReferenceValidator';
+import {
+  ValidationError,
+  RefResolutionError,
+  JsonRefValidationParams,
+  JsonRefTypeValidationParams,
+  PathValidationParams,
+} from './errors';
+import { prettyPrint } from './utils';
 
-// export interface ApiValidationResult extends ValidationResult<Ajv.ErrorObject> {}
-export interface ApiValidationResult extends ValidationResult<string> {}
-
-export interface OpenApi3Validator {
-  validateApi(apiToValidate: any): ApiValidationResult;
-}
+export type ContentProcessor = (location: string, originalObject: any) => any;
+export type PathTranslator = (rootLocation: string, docLocation: string) => string;
 
 export class OpenApi3ValidatorImpl implements OpenApi3Validator {
-  private validate: Ajv.ValidateFunction;
+  private ajv: Ajv.Ajv;
+  private contentProcessor?: ContentProcessor;
+  private pathTranslator?: PathTranslator;
 
-  constructor() {
+  constructor(pathTranslator?: PathTranslator, contentProcessor?: ContentProcessor) {
+    this.contentProcessor = contentProcessor;
+    this.pathTranslator = pathTranslator;
+    this.ajv = this.prepareAjvInstance();
+  }
+
+  async validateApi(document: object): Promise<ApiValidationResult> {
+    let apiToValidate = document;
+    try {
+      apiToValidate = await JsonReferenceValidator.initValidator(
+        this.ajv,
+        document,
+        this.pathTranslator,
+        this.contentProcessor
+      );
+      PathValidator.initValidator(this.ajv);
+      const validate = this.ajv.compile(getOpenApi3Schema());
+      const isValid = <boolean>validate(apiToValidate);
+      if (isValid === true) {
+        return { isValid };
+      }
+      return { isValid, errors: this.buildHumanErrors(apiToValidate, validate.errors!) };
+    } catch (refErrors) {
+      const resolutionError = <RefResolutionError>refErrors;
+      apiToValidate = resolutionError.resolved;
+      return { isValid: false, errors: this.buildHumanErrors(apiToValidate, resolutionError.errors) };
+    }
+  }
+
+  private prepareAjvInstance() {
     const ajv = Ajv({
       schemaId: 'id',
       meta: false, // optional, to prevent adding draft-06 meta-schema
@@ -36,54 +66,73 @@ export class OpenApi3ValidatorImpl implements OpenApi3Validator {
       // coerceTypes: true,
       allErrors: true,
       jsonPointers: true,
+      // $data: true,
     });
-    ajv.addMetaSchema(jsonSchemaDraft04Json);
 
+    ajv.addMetaSchema(jsonSchemaDraft04Json);
+    // ajv.addMetaSchema(dataJson, '$id');
+
+    this.addFormats(ajv);
+    // this.addKeywords(ajv);
+    return ajv;
+  }
+
+  private addFormats(ajv: Ajv.Ajv) {
     // Add uri-reference as uriref because that is what schema.json uses
     ajv.addFormat('uriref', ajvFormats.full['uri-reference']);
+  }
 
+  private addKeywords(ajv: Ajv.Ajv) {
+    /*
     ajv.addKeyword('pathsVarsUniqueAndBound', {
-      // type: 'string',
       errors: true,
       validate: pathsVarsUniqueAndBound,
     });
-
-    schemaJson['title'] = 'A JSON Schema for OpenAPI 3.0.';
-    schemaJson['id'] = 'http://openapis.org/v3/schema.json#';
-    schemaJson['$schema'] = 'http://json-schema.org/draft-04/schema#';
-
-    // Add minItems to the servers array or it is of no use
-    schemaJson['properties']['servers']['minItems'] = 1;
-
-    // Update the regular expression to validate paths
-    // const pathValidationRegEx = /^(\/[^{}\/]*(\{[a-zA-Z_][0-9a-zA-Z_]*\})?)+$/;
-    const pathValidationRegExString = '^(\\/[^{}\\/]*(\\{[a-zA-Z_][0-9a-zA-Z_]*\\})?)+$';
-    const patternProperties: any = {};
-    patternProperties[pathValidationRegExString] = {
-      $ref: '#/definitions/PathItem',
-    };
-    schemaJson['definitions']['Paths']['patternProperties'] = patternProperties;
-
-    schemaJson['definitions']['Paths']['pathsVarsUniqueAndBound'] = { a: 'b' };
-
-    // ajv.validateSchema(schemaJson);
-    this.validate = ajv.compile(schemaJson);
+*/
+    /*
+    ajv.addKeyword('defOrRef', {
+      macro: defOrRef,
+      metaSchema: {
+        // $schema: 'http://json-schema.org/draft-04/schema#',
+        // $schema: 'sub_schema',
+        type: 'object',
+        properties: {
+          $ref: { type: 'string' },
+        },
+        additionalProperties: false,
+      },
+    });
+*/
+    /*  
+ajv.addKeyword('validateRef', {
+      errors: true,
+      validate: this.apiRefValidator.getValidator(ajv),
+      // $data: true,
+      metaSchema: {
+        $schema: 'http://json-schema.org/draft-04/schema#',
+        type: 'string',
+      },
+    });
+*/
+    /*
+    ajv.addKeyword('validationSchema', {
+      metaSchema: {
+        $schema: 'http://json-schema.org/draft-04/schema#',
+        type: 'string',
+      },
+    });
+*/
   }
 
-  validateApi(apiToValidate: any): ApiValidationResult {
-    const isValid = <boolean>this.validate(apiToValidate);
-    if (isValid === true) {
-      return { isValid };
-    }
-    return { isValid, errors: this.buildHumanErrors(apiToValidate, this.validate.errors!) };
-  }
-
-  buildHumanErrors(apiToValidate: any, errors: Ajv.ErrorObject[]): string[] {
+  private buildHumanErrors(apiToValidate: any, errors: ValidationError[]): string[] {
     return errors.map(error => {
-      // console.log(error);
       let message: string;
-      const jsonPath = 'api' + error.dataPath;
-      const jsonValue = get(apiToValidate, error.dataPath);
+
+      const dataPath = error.dataPath;
+      const fileRelativePath = JsonReferenceValidator.dataPathToLocation(error);
+      const jsonPath = fileRelativePath.fileLocation + fileRelativePath.filePath;
+      const jsonValue = get(apiToValidate, dataPath);
+
       switch (error.keyword) {
         case 'type': {
           const params = <Ajv.TypeParams>error.params;
@@ -98,7 +147,7 @@ export class OpenApi3ValidatorImpl implements OpenApi3Validator {
         case 'format': {
           const params = <Ajv.FormatParams>error.params;
           let examples: string[] = [];
-          switch (error.dataPath) {
+          switch (dataPath) {
             case '/info/termsOfService': {
               examples = ['http://example.com/terms'];
               break;
@@ -131,7 +180,7 @@ export class OpenApi3ValidatorImpl implements OpenApi3Validator {
         case 'pattern': {
           const params = <Ajv.PatternParams>error.params;
           let examples: string[] = [];
-          switch (error.dataPath) {
+          switch (dataPath) {
             case '/openapi': {
               examples = ['3.0.1', '3.0.2-rc1'];
               break;
@@ -162,7 +211,7 @@ export class OpenApi3ValidatorImpl implements OpenApi3Validator {
         case 'additionalProperties': {
           const params = <Ajv.AdditionalPropertiesParams>error.params;
           let examples: string[] = [];
-          switch (error.dataPath) {
+          switch (dataPath) {
             case '/paths': {
               examples = ['/abc', '/{def}', '/abc/g{def}'];
               break;
@@ -174,11 +223,15 @@ export class OpenApi3ValidatorImpl implements OpenApi3Validator {
           message = this.buildMessage('Unknown property', jsonPath, undefined, params.additionalProperty, examples);
           break;
         }
-        case 'pathsVarsUniqueAndBound': {
-          const params = <pathsVarsUniqueAndBoundParams>error.params;
-          switch (params.keyword) {
+        case 'pathsValidation': {
+          const params = <PathValidationParams>error.params;
+          switch (params.type) {
+            case 'emptySegments': {
+              message = `Empty path segments at ${jsonPath}['${params.path}']`;
+              break;
+            }
             case 'identicalPaths': {
-              message = `Idential paths at ${jsonPath}['${params.path}'] - similar paths ${params.identicalPaths.join(
+              message = `Idential paths at ${jsonPath}['${params.path}'] - similar paths ${params.pathParams!.join(
                 ', '
               )}`;
               break;
@@ -186,7 +239,7 @@ export class OpenApi3ValidatorImpl implements OpenApi3Validator {
             case 'duplicateParameters': {
               message = `Multiple uses of same parameter at ${jsonPath}['${
                 params.path
-              }'] - duplicate parametrs ${params.duplicateParameters.join(', ')}`;
+              }'] - duplicate parametrs ${params.pathParams!.join(', ')}`;
               break;
             }
             default: {
@@ -195,22 +248,46 @@ export class OpenApi3ValidatorImpl implements OpenApi3Validator {
           }
           break;
         }
+        case 'jsonRefValidation': {
+          const params = <JsonRefValidationParams>error.params;
+          switch (params.type) {
+            case 'invalidReference': {
+              message = `Malformed reference at ${jsonPath} - value ${params.value}`;
+              break;
+            }
+            case 'missingReference': {
+              message = `Missing reference at ${jsonPath} - value ${params.value}`;
+              break;
+            }
+            default: {
+              message = 'Unknown error with json references';
+            }
+          }
+          break;
+        }
+        case 'jsonRefTypeValidation': {
+          const params = <JsonRefTypeValidationParams>error.params;
+          message = `Referenced type at ${jsonPath} - pointing to ${params.fqUri} must confirm to schema ${
+            params.schema
+          }`;
+          break;
+        }
         default: {
-          message = 'Unknown/unhandled error';
+          message = 'Unknown/unhandled error ' + error.keyword;
         }
       }
       return message;
     });
   }
 
-  buildMessage(error: string, source: string, expected?: string, actual?: string, examples?: string[]) {
+  private buildMessage(error: string, source: string, expected?: string, actual?: string, examples?: string[]) {
     const examplesStr = examples !== undefined && examples.length > 0 ? ' (e.g. ' + examples.join(', ') + ')' : '';
     return `${error} at ${source} - expected: ${expected === undefined ? '<none>' : expected}${examplesStr}, actual: ${
       actual === undefined ? '<none>' : actual
     }`;
   }
 
-  getType(jsonNode: any) {
+  private getType(jsonNode: any) {
     return typeof jsonNode;
   }
 }

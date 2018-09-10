@@ -1,0 +1,12 @@
+{
+  "title": "Api",
+  "description": "This is a sample server for a pet store.",
+  "termsOfService": "http://example.com/terms",
+  "license": {
+    "$ref": "./license.json"
+  },
+  "contact": {
+    "$ref": "./contact.json"
+  },
+  "version": "1.0.0"
+}

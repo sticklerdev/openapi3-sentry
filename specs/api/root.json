@@ -1,0 +1,15 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "$ref": "./info/info.json"
+  },
+  "servers": {
+    "$ref": "./servers/servers.json"
+  },
+  "components": {
+    "$ref": "./components/components.json"
+  },
+  "paths": {
+    "$ref": "./paths/paths.json"
+  }
+}

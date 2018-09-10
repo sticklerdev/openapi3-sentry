@@ -1,50 +1,28 @@
 {
-  "api": {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Info",
-      "description": "This is a sample server for a pet store.",
-      "termsOfService": "http://example.com/terms",
-      "contact": {
-        "name": "API Support",
-        "url": "http://www.example.com/support",
-        "email": "support@example.com"
-      },
-      "license": {
-        "name": "Apache 2.0",
-        "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-      },
-      "version": "1.0.0"
-    },
-    "paths": {}
-  },
-  "test": {
-    "description": "valid info is valid",
-    "result": { "isValid": true }
-  },
+  "apiFile": "info/info.json",
   "patches": [
     {
-      "operations": [{ "op": "remove", "path": "/info/title" }],
+      "operations": [{ "op": "remove", "path": "/title" }],
       "test": {
         "description": "api.info with missing title property is invalid",
         "result": {
           "isValid": false,
-          "errors": ["Missing required property at api/info - expected: title, actual: <none>"]
+          "errors": ["Missing required property at info/info.json# - expected: title, actual: <none>"]
         }
       }
     },
     {
-      "operations": [{ "op": "replace", "path": "/info/title", "value": { "a": "b" } }],
+      "operations": [{ "op": "replace", "path": "/title", "value": { "a": "b" } }],
       "test": {
         "description": "api.info with incorrect title property type is invalid",
         "result": {
           "isValid": false,
-          "errors": ["Invalid property type at api/info/title - expected: string, actual: object"]
+          "errors": ["Invalid property type at info/info.json#/title - expected: string, actual: object"]
         }
       }
     },
     {
-      "operations": [{ "op": "remove", "path": "/info/description" }],
+      "operations": [{ "op": "remove", "path": "/description" }],
       "test": {
         "description": "api.info without description property is valid",
         "result": {
@@ -53,17 +31,17 @@
       }
     },
     {
-      "operations": [{ "op": "replace", "path": "/info/description", "value": { "a": "b" } }],
+      "operations": [{ "op": "replace", "path": "/description", "value": { "a": "b" } }],
       "test": {
         "description": "api.info with incorrect description property type is invalid",
         "result": {
           "isValid": false,
-          "errors": ["Invalid property type at api/info/description - expected: string, actual: object"]
+          "errors": ["Invalid property type at info/info.json#/description - expected: string, actual: object"]
         }
       }
     },
     {
-      "operations": [{ "op": "remove", "path": "/info/termsOfService" }],
+      "operations": [{ "op": "remove", "path": "/termsOfService" }],
       "test": {
         "description": "api.info without termsOfService property is valid",
         "result": {
@@ -72,29 +50,29 @@
       }
     },
     {
-      "operations": [{ "op": "replace", "path": "/info/termsOfService", "value": { "a": "b" } }],
+      "operations": [{ "op": "replace", "path": "/termsOfService", "value": { "a": "b" } }],
       "test": {
         "description": "api.info with incorrect termsOfService property type is invalid",
         "result": {
           "isValid": false,
-          "errors": ["Invalid property type at api/info/termsOfService - expected: string, actual: object"]
+          "errors": ["Invalid property type at info/info.json#/termsOfService - expected: string, actual: object"]
         }
       }
     },
     {
-      "operations": [{ "op": "replace", "path": "/info/termsOfService", "value": "non uri-ref termsofservice" }],
+      "operations": [{ "op": "replace", "path": "/termsOfService", "value": "non uri-ref termsofservice" }],
       "test": {
         "description": "api.info with incorrect termsOfService property format is invalid",
         "result": {
           "isValid": false,
           "errors": [
-            "Invalid format for property value at api/info/termsOfService - expected: uriref (e.g. http://example.com/terms), actual: non uri-ref termsofservice"
+            "Invalid format for property value at info/info.json#/termsOfService - expected: uriref (e.g. http://example.com/terms), actual: non uri-ref termsofservice"
           ]
         }
       }
     },
     {
-      "operations": [{ "op": "remove", "path": "/info/contact" }],
+      "operations": [{ "op": "remove", "path": "/contact" }],
       "test": {
         "description": "api.info without contact property is valid",
         "result": {
@@ -103,17 +81,17 @@
       }
     },
     {
-      "operations": [{ "op": "replace", "path": "/info/contact", "value": "invalid contact" }],
+      "operations": [{ "op": "replace", "path": "/contact", "value": "invalid contact" }],
       "test": {
         "description": "api.info with incorrect contact property type is invalid",
         "result": {
           "isValid": false,
-          "errors": ["Invalid property type at api/info/contact - expected: object, actual: string"]
+          "errors": ["Invalid property type at info/info.json#/contact - expected: object, actual: string"]
         }
       }
     },
     {
-      "operations": [{ "op": "remove", "path": "/info/license" }],
+      "operations": [{ "op": "remove", "path": "/license" }],
       "test": {
         "description": "api.info without license property is valid",
         "result": {
@@ -122,32 +100,32 @@
       }
     },
     {
-      "operations": [{ "op": "replace", "path": "/info/license", "value": "invalid license" }],
+      "operations": [{ "op": "replace", "path": "/license", "value": "invalid license" }],
       "test": {
         "description": "api.info with incorrect license property type is invalid",
         "result": {
           "isValid": false,
-          "errors": ["Invalid property type at api/info/license - expected: object, actual: string"]
+          "errors": ["Invalid property type at info/info.json#/license - expected: object, actual: string"]
         }
       }
     },
     {
-      "operations": [{ "op": "remove", "path": "/info/version" }],
+      "operations": [{ "op": "remove", "path": "/version" }],
       "test": {
         "description": "api.info with missing version property is invalid",
         "result": {
           "isValid": false,
-          "errors": ["Missing required property at api/info - expected: version, actual: <none>"]
+          "errors": ["Missing required property at info/info.json# - expected: version, actual: <none>"]
         }
       }
     },
     {
-      "operations": [{ "op": "replace", "path": "/info/version", "value": 1 }],
+      "operations": [{ "op": "replace", "path": "/version", "value": 1 }],
       "test": {
         "description": "api.info with incorrect version property type is invalid",
         "result": {
           "isValid": false,
-          "errors": ["Invalid property type at api/info/version - expected: string, actual: number"]
+          "errors": ["Invalid property type at info/info.json#/version - expected: string, actual: number"]
         }
       }
     }

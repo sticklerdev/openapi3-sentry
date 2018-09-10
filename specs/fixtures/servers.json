@@ -1,0 +1,15 @@
+{
+  "apiFile": "servers/servers.json",
+  "patches": [
+    {
+      "operations": [{ "op": "remove", "path": "/0" }],
+      "test": {
+        "description": "empty servers array is invalid",
+        "result": {
+          "isValid": false,
+          "errors": ["Invalid length for property value at servers/servers.json# - expected: min 1, actual: 0"]
+        }
+      }
+    }
+  ]
+}

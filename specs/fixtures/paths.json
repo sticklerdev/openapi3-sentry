@@ -1,23 +1,8 @@
 {
-  "api": {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Paths",
-      "version": "1.0.0"
-    },
-    "paths": {
-      "/": {
-        "$ref": "does-not-exist.json"
-      }
-    }
-  },
-  "test": {
-    "description": "minimum possible paths (/) is valid",
-    "result": { "isValid": true }
-  },
+  "apiFile": "paths/paths.json",
   "patches": [
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1abc" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1abc" }],
       "test": {
         "description": "path with single non-parameterized segment (/abc) is valid",
         "result": {
@@ -26,7 +11,17 @@
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1abc~1" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1~1abc" }],
+      "test": {
+        "description": "path with neither parameterized nor non-parameterized segment (//abc) is valid",
+        "result": {
+          "isValid": false,
+          "errors": ["Empty path segments at paths/paths.json#['//abc']"]
+        }
+      }
+    },
+    {
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1abc~1" }],
       "test": {
         "description": "path with single non-parameterized segment with trailing slash (/abc/) is valid",
         "result": {
@@ -35,7 +30,7 @@
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1{def}" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1{def}" }],
       "test": {
         "description": "path with single non-prefixed parameterized segment (/{def}) is valid",
         "result": {
@@ -44,7 +39,7 @@
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1{def}~1" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1{def}~1" }],
       "test": {
         "description": "path with single non-prefixed parameterized segment with trailing slash (/{def}/) is valid",
         "result": {
@@ -53,7 +48,7 @@
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1{_def}" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1{_def}" }],
       "test": {
         "description": "path with parameter name starting with an underscore (/{_def}) is valid",
         "result": {
@@ -62,7 +57,7 @@
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1{_def1_h2}" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1{_def1_h2}" }],
       "test": {
         "description":
           "path with parameter name containing a digit in second or later position with underscores (/{_def1_h2}) is valid",
@@ -72,7 +67,7 @@
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1g{def}" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1g{def}" }],
       "test": {
         "description": "path with single prefixed parameterized segment (/g{def}) is valid",
         "result": {
@@ -81,7 +76,7 @@
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1g{def}~1" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1g{def}~1" }],
       "test": {
         "description": "path with single prefixed parameterized segment with trailing slash (/g{def}/) is valid",
         "result": {
@@ -90,7 +85,7 @@
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1abc~1{def}" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1abc~1{def}" }],
       "test": {
         "description": "path with non-parameterized segment followed by parameterized segment (/abc/{def}) is valid",
         "result": {
@@ -99,7 +94,7 @@
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1{def}~1abc" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1{def}~1abc" }],
       "test": {
         "description": "path with parameterized segment followed by non-parameterized segment (/{def}/abc) is valid",
         "result": {
@@ -108,96 +103,103 @@
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/abc" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/abc" }],
       "test": {
         "description": "path with single non-parameterized segment without leading slash (abc) is invalid",
         "result": {
           "isValid": false,
-          "errors": ["Unknown property at api/paths - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: abc"]
+          "errors": [
+            "Unknown property at paths/paths.json# - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: abc"
+          ]
         }
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/{def}" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/{def}" }],
       "test": {
         "description": "path with single non-parameterized segment without leading slash ({def}) is invalid",
         "result": {
           "isValid": false,
-          "errors": ["Unknown property at api/paths - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: {def}"]
+          "errors": [
+            "Unknown property at paths/paths.json# - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: {def}"
+          ]
         }
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1{1def}" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1{1def}" }],
       "test": {
         "description": "path with parameter name starting with a digit (/{1def}) is invalid",
         "result": {
           "isValid": false,
           "errors": [
-            "Unknown property at api/paths - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: /{1def}"
+            "Unknown property at paths/paths.json# - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: /{1def}"
           ]
         }
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1{{def}}" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1{{def}}" }],
       "test": {
         "description": "path segment with nested parameterized properties is (/{{def}}) is invalid",
         "result": {
           "isValid": false,
           "errors": [
-            "Unknown property at api/paths - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: /{{def}}"
+            "Unknown property at paths/paths.json# - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: /{{def}}"
           ]
         }
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1{def}{ghi}" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1{def}{ghi}" }],
       "test": {
         "description": "path segment with multiple parameterized properties is (/{def}{ghi}) is invalid",
         "result": {
           "isValid": false,
           "errors": [
-            "Unknown property at api/paths - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: /{def}{ghi}"
+            "Unknown property at paths/paths.json# - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: /{def}{ghi}"
           ]
         }
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1a~1{d" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1a~1{d" }],
       "test": {
         "description": "path segment with unbalanced left curly brace is (/a/{d) is invalid",
         "result": {
           "isValid": false,
-          "errors": ["Unknown property at api/paths - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: /a/{d"]
+          "errors": [
+            "Unknown property at paths/paths.json# - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: /a/{d"
+          ]
         }
       }
     },
     {
-      "operations": [{ "op": "move", "from": "/paths/~1", "path": "/paths/~1a~1d}" }],
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~1a~1d}" }],
       "test": {
         "description": "path segment with unbalanced right curly brace is (/a/d}) is invalid",
         "result": {
           "isValid": false,
-          "errors": ["Unknown property at api/paths - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: /a/d}"]
+          "errors": [
+            "Unknown property at paths/paths.json# - expected: <none> (e.g. /abc, /{def}, /abc/g{def}), actual: /a/d}"
+          ]
         }
       }
     },
-
     {
       "operations": [
         {
           "op": "replace",
-          "path": "/paths",
+          "path": "",
           "value": {
             "/a": {
-              "$ref": "does-not-exist.json"
+              "$ref": "./pathItem.json#"
             },
             "/{param1}": {
-              "$ref": "does-not-exist.json"
+              "$ref": "./pathItem.json#"
             },
             "/a{param1}": {
-              "$ref": "does-not-exist.json"
+              "$ref": "./pathItem.json#"
             }
           }
         }
@@ -213,9 +215,9 @@
           "operations": [
             {
               "op": "add",
-              "path": "/paths/~1param1~1{param1}",
+              "path": "/~1param1~1{param1}",
               "value": {
-                "$ref": "does-not-exist.json"
+                "$ref": "./pathItem.json"
               }
             }
           ],
@@ -230,9 +232,9 @@
           "operations": [
             {
               "op": "add",
-              "path": "/paths/~1{param1}~1{param1}",
+              "path": "/~1{param1}~1{param1}",
               "value": {
-                "$ref": "does-not-exist.json"
+                "$ref": "./pathItem.json"
               }
             }
           ],
@@ -241,7 +243,7 @@
             "result": {
               "isValid": false,
               "errors": [
-                "Multiple uses of same parameter at api/paths['/{param1}/{param1}'] - duplicate parametrs param1"
+                "Multiple uses of same parameter at paths/paths.json#['/{param1}/{param1}'] - duplicate parametrs param1"
               ]
             }
           }
@@ -250,9 +252,9 @@
           "operations": [
             {
               "op": "add",
-              "path": "/paths/~1{param1}~1{param2}~1{param2}~1{param1}",
+              "path": "/~1{param1}~1{param2}~1{param2}~1{param1}",
               "value": {
-                "$ref": "does-not-exist.json"
+                "$ref": "./pathItem.json"
               }
             }
           ],
@@ -261,7 +263,7 @@
             "result": {
               "isValid": false,
               "errors": [
-                "Multiple uses of same parameter at api/paths['/{param1}/{param2}/{param2}/{param1}'] - duplicate parametrs param1, param2"
+                "Multiple uses of same parameter at paths/paths.json#['/{param1}/{param2}/{param2}/{param1}'] - duplicate parametrs param1, param2"
               ]
             }
           }
@@ -270,9 +272,9 @@
           "operations": [
             {
               "op": "add",
-              "path": "/paths/~1param1",
+              "path": "/~1param1",
               "value": {
-                "$ref": "does-not-exist.json"
+                "$ref": "./pathItem.json"
               }
             }
           ],
@@ -287,9 +289,9 @@
           "operations": [
             {
               "op": "add",
-              "path": "/paths/~1a~1",
+              "path": "/~1a~1",
               "value": {
-                "$ref": "does-not-exist.json"
+                "$ref": "./pathItem.json"
               }
             }
           ],
@@ -297,7 +299,7 @@
             "description": "non parameterized paths that vary only in trailing slash is invalid",
             "result": {
               "isValid": false,
-              "errors": ["Idential paths at api/paths['/a'] - similar paths /a/"]
+              "errors": ["Idential paths at paths/paths.json#['/a'] - similar paths /a/"]
             }
           }
         },
@@ -305,9 +307,9 @@
           "operations": [
             {
               "op": "add",
-              "path": "/paths/~1{param1}~1",
+              "path": "/~1{param1}~1",
               "value": {
-                "$ref": "does-not-exist.json"
+                "$ref": "./pathItem.json"
               }
             }
           ],
@@ -315,7 +317,7 @@
             "description": "parameterized paths that vary only in trailing slash is invalid",
             "result": {
               "isValid": false,
-              "errors": ["Idential paths at api/paths['/{param1}'] - similar paths /{param1}/"]
+              "errors": ["Idential paths at paths/paths.json#['/{param1}'] - similar paths /{param1}/"]
             }
           }
         },
@@ -323,9 +325,9 @@
           "operations": [
             {
               "op": "add",
-              "path": "/paths/~1{param2}",
+              "path": "/~1{param2}",
               "value": {
-                "$ref": "does-not-exist.json"
+                "$ref": "./pathItem.json"
               }
             }
           ],
@@ -333,7 +335,7 @@
             "description": "parameterized paths that vary only in formal parameter names is invalid",
             "result": {
               "isValid": false,
-              "errors": ["Idential paths at api/paths['/{param1}'] - similar paths /{param2}"]
+              "errors": ["Idential paths at paths/paths.json#['/{param1}'] - similar paths /{param2}"]
             }
           }
         }

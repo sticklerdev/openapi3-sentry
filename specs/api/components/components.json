@@ -1,0 +1,28 @@
+{
+  "requestBodies": {
+    "defaultRequestBody": {
+      "content": {}
+    }
+  },
+  "schemas": {
+    "defaultSchema": {
+      "type": "object",
+      "properties": {
+        "node": {
+          "type": "string"
+        }
+      }
+    },
+    "pet": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

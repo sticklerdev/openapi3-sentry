@@ -1,0 +1,181 @@
+{
+  "apiFile": "components/components.json",
+  "patches": [
+    {
+      "operations": [
+        {
+          "op": "add",
+          "path": "/requestBodies/referencingRequestBody",
+          "value": { "$ref": "#/requestBodies/defaultRequestBody" }
+        }
+      ],
+      "test": {
+        "description": "component pointing to local reference of correct type is valid",
+        "result": {
+          "isValid": true
+        }
+      }
+    },
+    {
+      "operations": [
+        {
+          "op": "add",
+          "path": "/requestBodies/referencingRequestBody",
+          "value": { "$ref": "./referencedRequestBody.json" }
+        }
+      ],
+      "test": {
+        "description": "component pointing to relative file reference of correct type is valid",
+        "result": {
+          "isValid": true
+        }
+      }
+    },
+    {
+      "operations": [
+        {
+          "op": "add",
+          "path": "/requestBodies/referencingRequestBody",
+          "value": { "$ref": "./referencedRequestBody1.json" }
+        }
+      ],
+      "test": {
+        "description": "component pointing to relative (missing) file reference is invalid",
+        "result": {
+          "isValid": false,
+          "errors": [
+            "Missing reference at components/components.json#/requestBodies/referencingRequestBody - value ./referencedRequestBody1.json"
+          ]
+        }
+      }
+    },
+    {
+      "operations": [
+        {
+          "op": "add",
+          "path": "/requestBodies/referencingRequestBody",
+          "value": {
+            "content": {
+              "$ref": "./referencedRequestBody.json#/content"
+            }
+          }
+        }
+      ],
+      "test": {
+        "description": "component pointing to relative file hash reference of correct type is valid",
+        "result": {
+          "isValid": true
+        }
+      }
+    },
+    {
+      "operations": [
+        {
+          "op": "add",
+          "path": "/requestBodies/referencingRequestBody",
+          "value": {
+            "content": {
+              "$ref": "./referencedRequestBody.json#/content1"
+            }
+          }
+        }
+      ],
+      "test": {
+        "description": "component pointing to missing file hash reference is invalid",
+        "result": {
+          "isValid": false,
+          "errors": [
+            "Missing reference at components/components.json#/requestBodies/referencingRequestBody/content - value ./referencedRequestBody.json#/content1"
+          ]
+        }
+      }
+    },
+    {
+      "operations": [
+        {
+          "op": "add",
+          "path": "/requestBodies/referencingRequestBody",
+          "value": { "$ref": "http://localhost:55555/api/components/referencedRequestBody.json" }
+        }
+      ],
+      "test": {
+        "description": "component pointing to remote file reference of correct type is valid",
+        "result": {
+          "isValid": true
+        }
+      }
+    },
+    {
+      "operations": [
+        {
+          "op": "add",
+          "path": "/requestBodies/referencingRequestBody",
+          "value": { "$ref": "http://localhost:55555/api/components/referencedRequestBody1.json" }
+        }
+      ],
+      "test": {
+        "description": "component pointing to remote (missing) file reference is invalid",
+        "result": {
+          "isValid": false,
+          "errors": [
+            "Missing reference at components/components.json#/requestBodies/referencingRequestBody - value http://localhost:55555/api/components/referencedRequestBody1.json"
+          ]
+        }
+      }
+    },
+    {
+      "operations": [
+        {
+          "op": "add",
+          "path": "/requestBodies/referencingRequestBody",
+          "value": { "$ref": "http://:8080" }
+        }
+      ],
+      "test": {
+        "description": "component pointing to invalid reference is invalid",
+        "result": {
+          "isValid": false,
+          "errors": [
+            "Malformed reference at components/components.json#/requestBodies/referencingRequestBody - value http://:8080"
+          ]
+        }
+      }
+    },
+    {
+      "operations": [
+        {
+          "op": "add",
+          "path": "/requestBodies/referencingRequestBody",
+          "value": { "$ref": "#/requestBodies/defaultRequestBody1" }
+        }
+      ],
+      "test": {
+        "description": "component pointing to missing reference is invalid",
+        "result": {
+          "isValid": false,
+          "errors": [
+            "Missing reference at components/components.json#/requestBodies/referencingRequestBody - value #/requestBodies/defaultRequestBody1"
+          ]
+        }
+      }
+    },
+    {
+      "operations": [
+        {
+          "op": "add",
+          "path": "/requestBodies/referencingRequestBody",
+          "value": { "$ref": "#/schemas/defaultSchema" }
+        }
+      ],
+      "test": {
+        "description": "component pointing to exiting reference of incorrect type is invalid",
+        "result": {
+          "isValid": false,
+          "errors": [
+            "Referenced type at components/components.json#/requestBodies/referencingRequestBody - pointing to #/schemas/defaultSchema must confirm to schema #/definitions/RequestBody"
+          ]
+        }
+      }
+    }
+  ]
+}
