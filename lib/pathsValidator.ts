@@ -27,12 +27,12 @@ function createError(
   };
 }
 
-export class PathValidator {
+export class PathsValidator {
   static async initValidator(ajv: Ajv.Ajv) {
     ajv.removeKeyword('validatePaths');
     ajv.addKeyword('validatePaths', {
       errors: true,
-      validate: PathValidator.pathsVarsUniqueAndBound,
+      validate: PathsValidator.pathsVarsUniqueAndBound,
     });
   }
 
@@ -59,14 +59,14 @@ export class PathValidator {
         const isMatch = pathMatchEx.test(path);
         // Do these additional tests only if match is true, i.e. things that aren't caught by the regular expression iteslf
         if (isMatch === true) {
-          const pathSegments = PathValidator.getPathSegments(path);
+          const pathSegments = PathsValidator.getPathSegments(path);
           if (path !== '/') {
-            const emptySegments = PathValidator.findEmptySegmentsInPath(pathSegments);
+            const emptySegments = PathsValidator.findEmptySegmentsInPath(pathSegments);
             if (emptySegments.length > 0) {
               errors.push(createError(dataPath!, 'emptySegments', path));
             }
           }
-          const duplicateParameters = PathValidator.findDuplicateParametersInPath(pathSegments);
+          const duplicateParameters = PathsValidator.findDuplicateParametersInPath(pathSegments);
           if (duplicateParameters.length > 0) {
             errors.push(createError(dataPath!, 'duplicateParameters', path, duplicateParameters));
           }
@@ -76,7 +76,7 @@ export class PathValidator {
       const pathToIdenticalsMap = new Map<string, string[]>();
       for (const path in data) {
         if (pathToSegmentsMap.has(path)) {
-          const identicalPaths = PathValidator.findIdenticalPaths(path, pathToSegmentsMap);
+          const identicalPaths = PathsValidator.findIdenticalPaths(path, pathToSegmentsMap);
           pathToSegmentsMap.delete(path);
           if (identicalPaths.length > 0) {
             pathToIdenticalsMap.set(path, identicalPaths);
@@ -87,7 +87,7 @@ export class PathValidator {
           }
         }
       }
-      PathValidator.pathsVarsUniqueAndBound['errors'] = errors;
+      PathsValidator.pathsVarsUniqueAndBound['errors'] = errors;
       return errors.length > 0 ? false : true;
     }
     return true;
@@ -154,7 +154,7 @@ export class PathValidator {
       } else {
         pathSegments.forEach((pathSegment, index) => {
           segmentsIdential =
-            segmentsIdential && PathValidator.isSegmentIdentical(pathSegment, pathSegmentsToCheckAgainst[index]);
+            segmentsIdential && PathsValidator.isSegmentIdentical(pathSegment, pathSegmentsToCheckAgainst[index]);
         });
       }
       if (segmentsIdential === true) {

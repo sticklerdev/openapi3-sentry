@@ -3,7 +3,7 @@
   "patches": [
     {
       "operations": [{ "op": "remove", "path": "/name" }],
-      "test": {
+      "tests": {
         "description": "api.info.license with missing name property is invalid",
         "result": {
           "isValid": false,
@@ -13,7 +13,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/name", "value": { "a": "b" } }],
-      "test": {
+      "tests": {
         "description": "api.info.license with incorrect name property type is invalid",
         "result": {
           "isValid": false,
@@ -23,7 +23,7 @@
     },
     {
       "operations": [{ "op": "remove", "path": "/url" }],
-      "test": {
+      "tests": {
         "description": "api.info.license without url property is valid",
         "result": {
           "isValid": true
@@ -32,7 +32,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/url", "value": { "a": "b" } }],
-      "test": {
+      "tests": {
         "description": "api.info.license with incorrect url property type is invalid",
         "result": {
           "isValid": false,
@@ -42,7 +42,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/url", "value": "non uri-ref url" }],
-      "test": {
+      "tests": {
         "description": "api.info.license with incorrect url property format is invalid",
         "result": {
           "isValid": false,

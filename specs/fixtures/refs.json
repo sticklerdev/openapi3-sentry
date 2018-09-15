@@ -9,7 +9,7 @@
           "value": { "$ref": "#/requestBodies/defaultRequestBody" }
         }
       ],
-      "test": {
+      "tests": {
         "description": "component pointing to local reference of correct type is valid",
         "result": {
           "isValid": true
@@ -24,7 +24,7 @@
           "value": { "$ref": "./referencedRequestBody.json" }
         }
       ],
-      "test": {
+      "tests": {
         "description": "component pointing to relative file reference of correct type is valid",
         "result": {
           "isValid": true
@@ -39,7 +39,7 @@
           "value": { "$ref": "./referencedRequestBody1.json" }
         }
       ],
-      "test": {
+      "tests": {
         "description": "component pointing to relative (missing) file reference is invalid",
         "result": {
           "isValid": false,
@@ -61,7 +61,7 @@
           }
         }
       ],
-      "test": {
+      "tests": {
         "description": "component pointing to relative file hash reference of correct type is valid",
         "result": {
           "isValid": true
@@ -80,7 +80,7 @@
           }
         }
       ],
-      "test": {
+      "tests": {
         "description": "component pointing to missing file hash reference is invalid",
         "result": {
           "isValid": false,
@@ -98,7 +98,7 @@
           "value": { "$ref": "http://localhost:55555/api/components/referencedRequestBody.json" }
         }
       ],
-      "test": {
+      "tests": {
         "description": "component pointing to remote file reference of correct type is valid",
         "result": {
           "isValid": true
@@ -113,7 +113,7 @@
           "value": { "$ref": "http://localhost:55555/api/components/referencedRequestBody1.json" }
         }
       ],
-      "test": {
+      "tests": {
         "description": "component pointing to remote (missing) file reference is invalid",
         "result": {
           "isValid": false,
@@ -131,7 +131,7 @@
           "value": { "$ref": "http://:8080" }
         }
       ],
-      "test": {
+      "tests": {
         "description": "component pointing to invalid reference is invalid",
         "result": {
           "isValid": false,
@@ -149,7 +149,7 @@
           "value": { "$ref": "#/requestBodies/defaultRequestBody1" }
         }
       ],
-      "test": {
+      "tests": {
         "description": "component pointing to missing reference is invalid",
         "result": {
           "isValid": false,
@@ -167,7 +167,7 @@
           "value": { "$ref": "#/schemas/defaultSchema" }
         }
       ],
-      "test": {
+      "tests": {
         "description": "component pointing to exiting reference of incorrect type is invalid",
         "result": {
           "isValid": false,

@@ -3,7 +3,7 @@
   "patches": [
     {
       "operations": [{ "op": "remove", "path": "/title" }],
-      "test": {
+      "tests": {
         "description": "api.info with missing title property is invalid",
         "result": {
           "isValid": false,
@@ -13,7 +13,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/title", "value": { "a": "b" } }],
-      "test": {
+      "tests": {
         "description": "api.info with incorrect title property type is invalid",
         "result": {
           "isValid": false,
@@ -23,7 +23,7 @@
     },
     {
       "operations": [{ "op": "remove", "path": "/description" }],
-      "test": {
+      "tests": {
         "description": "api.info without description property is valid",
         "result": {
           "isValid": true
@@ -32,7 +32,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/description", "value": { "a": "b" } }],
-      "test": {
+      "tests": {
         "description": "api.info with incorrect description property type is invalid",
         "result": {
           "isValid": false,
@@ -42,7 +42,7 @@
     },
     {
       "operations": [{ "op": "remove", "path": "/termsOfService" }],
-      "test": {
+      "tests": {
         "description": "api.info without termsOfService property is valid",
         "result": {
           "isValid": true
@@ -51,7 +51,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/termsOfService", "value": { "a": "b" } }],
-      "test": {
+      "tests": {
         "description": "api.info with incorrect termsOfService property type is invalid",
         "result": {
           "isValid": false,
@@ -61,7 +61,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/termsOfService", "value": "non uri-ref termsofservice" }],
-      "test": {
+      "tests": {
         "description": "api.info with incorrect termsOfService property format is invalid",
         "result": {
           "isValid": false,
@@ -73,7 +73,7 @@
     },
     {
       "operations": [{ "op": "remove", "path": "/contact" }],
-      "test": {
+      "tests": {
         "description": "api.info without contact property is valid",
         "result": {
           "isValid": true
@@ -82,7 +82,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/contact", "value": "invalid contact" }],
-      "test": {
+      "tests": {
         "description": "api.info with incorrect contact property type is invalid",
         "result": {
           "isValid": false,
@@ -92,7 +92,7 @@
     },
     {
       "operations": [{ "op": "remove", "path": "/license" }],
-      "test": {
+      "tests": {
         "description": "api.info without license property is valid",
         "result": {
           "isValid": true
@@ -101,7 +101,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/license", "value": "invalid license" }],
-      "test": {
+      "tests": {
         "description": "api.info with incorrect license property type is invalid",
         "result": {
           "isValid": false,
@@ -111,7 +111,7 @@
     },
     {
       "operations": [{ "op": "remove", "path": "/version" }],
-      "test": {
+      "tests": {
         "description": "api.info with missing version property is invalid",
         "result": {
           "isValid": false,
@@ -121,7 +121,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/version", "value": 1 }],
-      "test": {
+      "tests": {
         "description": "api.info with incorrect version property type is invalid",
         "result": {
           "isValid": false,

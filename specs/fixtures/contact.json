@@ -7,7 +7,7 @@
         { "op": "remove", "path": "/url" },
         { "op": "remove", "path": "/email" }
       ],
-      "test": {
+      "tests": {
         "description": "empty api.info.contact is valid",
         "result": {
           "isValid": true
@@ -16,7 +16,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/name", "value": { "a": "b" } }],
-      "test": {
+      "tests": {
         "description": "api.info.contact with incorrect name property type is invalid",
         "result": {
           "isValid": false,
@@ -26,7 +26,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/url", "value": { "a": "b" } }],
-      "test": {
+      "tests": {
         "description": "api.info.contact with incorrect url property type is invalid",
         "result": {
           "isValid": false,
@@ -36,7 +36,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/url", "value": "non uri-ref url" }],
-      "test": {
+      "tests": {
         "description": "api.info.contact with incorrect url property format is invalid",
         "result": {
           "isValid": false,
@@ -48,7 +48,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/email", "value": { "a": "b" } }],
-      "test": {
+      "tests": {
         "description": "api.info.contact with incorrect email property type is invalid",
         "result": {
           "isValid": false,
@@ -58,7 +58,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/email", "value": "invalid email address" }],
-      "test": {
+      "tests": {
         "description": "api.info.contact with incorrect email property format is invalid",
         "result": {
           "isValid": false,

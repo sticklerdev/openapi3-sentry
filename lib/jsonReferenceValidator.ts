@@ -2,7 +2,7 @@ import * as Ajv from 'ajv';
 import { get } from 'json-pointer';
 import jsonRefs = require('json-refs');
 
-import { ContentProcessor, PathTranslator } from './validator';
+import { ContentProcessor, PathTranslator } from './openApi3Validator';
 import {
   BaseError,
   FileRelativeError,

@@ -3,7 +3,7 @@
   "patches": [
     {
       "operations": [{ "op": "remove", "path": "/0" }],
-      "test": {
+      "tests": {
         "description": "empty servers array is invalid",
         "result": {
           "isValid": false,

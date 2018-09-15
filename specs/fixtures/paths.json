@@ -3,7 +3,7 @@
   "patches": [
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1abc" }],
-      "test": {
+      "tests": {
         "description": "path with single non-parameterized segment (/abc) is valid",
         "result": {
           "isValid": true
@@ -11,9 +11,18 @@
       }
     },
     {
+      "operations": [{ "op": "move", "from": "/~1", "path": "/~11" }],
+      "tests": {
+        "description": "path with single non-parameterized segment (/1) is valid",
+        "result": {
+          "isValid": true
+        }
+      }
+    },
+    {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1~1abc" }],
-      "test": {
-        "description": "path with neither parameterized nor non-parameterized segment (//abc) is valid",
+      "tests": {
+        "description": "path with neither parameterized nor non-parameterized segment (//abc) is invalid",
         "result": {
           "isValid": false,
           "errors": ["Empty path segments at paths/paths.json#['//abc']"]
@@ -22,7 +31,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1abc~1" }],
-      "test": {
+      "tests": {
         "description": "path with single non-parameterized segment with trailing slash (/abc/) is valid",
         "result": {
           "isValid": true
@@ -31,7 +40,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1{def}" }],
-      "test": {
+      "tests": {
         "description": "path with single non-prefixed parameterized segment (/{def}) is valid",
         "result": {
           "isValid": true
@@ -40,7 +49,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1{def}~1" }],
-      "test": {
+      "tests": {
         "description": "path with single non-prefixed parameterized segment with trailing slash (/{def}/) is valid",
         "result": {
           "isValid": true
@@ -49,7 +58,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1{_def}" }],
-      "test": {
+      "tests": {
         "description": "path with parameter name starting with an underscore (/{_def}) is valid",
         "result": {
           "isValid": true
@@ -58,7 +67,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1{_def1_h2}" }],
-      "test": {
+      "tests": {
         "description":
           "path with parameter name containing a digit in second or later position with underscores (/{_def1_h2}) is valid",
         "result": {
@@ -68,7 +77,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1g{def}" }],
-      "test": {
+      "tests": {
         "description": "path with single prefixed parameterized segment (/g{def}) is valid",
         "result": {
           "isValid": true
@@ -77,7 +86,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1g{def}~1" }],
-      "test": {
+      "tests": {
         "description": "path with single prefixed parameterized segment with trailing slash (/g{def}/) is valid",
         "result": {
           "isValid": true
@@ -86,7 +95,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1abc~1{def}" }],
-      "test": {
+      "tests": {
         "description": "path with non-parameterized segment followed by parameterized segment (/abc/{def}) is valid",
         "result": {
           "isValid": true
@@ -95,7 +104,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1{def}~1abc" }],
-      "test": {
+      "tests": {
         "description": "path with parameterized segment followed by non-parameterized segment (/{def}/abc) is valid",
         "result": {
           "isValid": true
@@ -104,7 +113,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/abc" }],
-      "test": {
+      "tests": {
         "description": "path with single non-parameterized segment without leading slash (abc) is invalid",
         "result": {
           "isValid": false,
@@ -116,7 +125,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/{def}" }],
-      "test": {
+      "tests": {
         "description": "path with single non-parameterized segment without leading slash ({def}) is invalid",
         "result": {
           "isValid": false,
@@ -128,7 +137,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1{1def}" }],
-      "test": {
+      "tests": {
         "description": "path with parameter name starting with a digit (/{1def}) is invalid",
         "result": {
           "isValid": false,
@@ -140,7 +149,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1{{def}}" }],
-      "test": {
+      "tests": {
         "description": "path segment with nested parameterized properties is (/{{def}}) is invalid",
         "result": {
           "isValid": false,
@@ -152,7 +161,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1{def}{ghi}" }],
-      "test": {
+      "tests": {
         "description": "path segment with multiple parameterized properties is (/{def}{ghi}) is invalid",
         "result": {
           "isValid": false,
@@ -164,7 +173,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1a~1{d" }],
-      "test": {
+      "tests": {
         "description": "path segment with unbalanced left curly brace is (/a/{d) is invalid",
         "result": {
           "isValid": false,
@@ -176,7 +185,7 @@
     },
     {
       "operations": [{ "op": "move", "from": "/~1", "path": "/~1a~1d}" }],
-      "test": {
+      "tests": {
         "description": "path segment with unbalanced right curly brace is (/a/d}) is invalid",
         "result": {
           "isValid": false,
@@ -204,7 +213,7 @@
           }
         }
       ],
-      "test": {
+      "tests": {
         "description": "paths with mix of prefixed and non-prefixed segments is valid",
         "result": {
           "isValid": true
@@ -221,7 +230,7 @@
               }
             }
           ],
-          "test": {
+          "tests": {
             "description": "path with same name used as prefix and parameter is valid",
             "result": {
               "isValid": true
@@ -238,7 +247,7 @@
               }
             }
           ],
-          "test": {
+          "tests": {
             "description": "path with single duplicated parameter is invalid",
             "result": {
               "isValid": false,
@@ -258,7 +267,7 @@
               }
             }
           ],
-          "test": {
+          "tests": {
             "description": "path with multiple duplicated parameters is invalid",
             "result": {
               "isValid": false,
@@ -278,7 +287,7 @@
               }
             }
           ],
-          "test": {
+          "tests": {
             "description": "two paths with same name used as prefix in one and parameter in another is valid",
             "result": {
               "isValid": true
@@ -295,7 +304,7 @@
               }
             }
           ],
-          "test": {
+          "tests": {
             "description": "non parameterized paths that vary only in trailing slash is invalid",
             "result": {
               "isValid": false,
@@ -313,7 +322,7 @@
               }
             }
           ],
-          "test": {
+          "tests": {
             "description": "parameterized paths that vary only in trailing slash is invalid",
             "result": {
               "isValid": false,
@@ -331,7 +340,7 @@
               }
             }
           ],
-          "test": {
+          "tests": {
             "description": "parameterized paths that vary only in formal parameter names is invalid",
             "result": {
               "isValid": false,

@@ -1,13 +1,15 @@
 {
   "apiFile": "root.json",
-  "test": {
-    "description": "minimum possible api is valid",
-    "result": { "isValid": true }
-  },
+  "tests": [
+    {
+      "description": "minimum possible api is valid",
+      "result": { "isValid": true }
+    }
+  ],
   "patches": [
     {
       "operations": [{ "op": "remove", "path": "/openapi" }],
-      "test": {
+      "tests": {
         "description": "api with missing openapi property is invalid",
         "result": {
           "isValid": false,
@@ -17,7 +19,7 @@
     },
     {
       "operations": [{ "op": "remove", "path": "/info" }],
-      "test": {
+      "tests": {
         "description": "api with missing info property is invalid",
         "result": {
           "isValid": false,
@@ -27,7 +29,7 @@
     },
     {
       "operations": [{ "op": "remove", "path": "/paths" }],
-      "test": {
+      "tests": {
         "description": "api with missing paths property is invalid",
         "result": {
           "isValid": false,
@@ -37,7 +39,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/openapi", "value": { "a": "b" } }],
-      "test": {
+      "tests": {
         "description": "api with incorrect openapi property type is invalid",
         "result": {
           "isValid": false,
@@ -47,7 +49,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/openapi", "value": "4.0.0" }],
-      "test": {
+      "tests": {
         "description": "api with incorrect major version for openapi property is invalid",
         "result": {
           "isValid": false,
@@ -59,7 +61,7 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/openapi", "value": "3.1.0" }],
-      "test": {
+      "tests": {
         "description": "api with incorrect minor version for openapi property is invalid",
         "result": {
           "isValid": false,
@@ -71,14 +73,14 @@
     },
     {
       "operations": [{ "op": "replace", "path": "/openapi", "value": "3.0.1" }],
-      "test": {
+      "tests": {
         "description": "api with patch version for openapi property is valid",
         "result": { "isValid": true }
       }
     },
     {
       "operations": [{ "op": "replace", "path": "/openapi", "value": "3.0.2-rc1" }],
-      "test": {
+      "tests": {
         "description": "api with patch, pre-release version for openapi property is valid",
         "result": { "isValid": true }
       }

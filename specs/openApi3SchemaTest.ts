@@ -10,7 +10,7 @@ describe('Preamble', () => {
     schema = {};
   });
 
-  it('should have title, id, schema for root element', () => {
+  it('should have title, id, schema added to root element', () => {
     sut(schema);
     // console.log(JSON.stringify(schema, null, 2));
     expect(schema).to.deep.equal({
@@ -21,7 +21,7 @@ describe('Preamble', () => {
   });
 });
 
-describe('Servers', () => {
+describe('Min Items', () => {
   let schema: object;
   const sut = patchServers;
 
@@ -45,7 +45,7 @@ describe('Servers', () => {
     };
   });
 
-  it('should have minItems for servers, PathItem and Operation elements', () => {
+  it('should have minItems added to Servers, PathItem and Operation elements', () => {
     sut(schema);
     // console.log(JSON.stringify(schema, null, 2));
     expect(schema).to.deep.equal({
@@ -66,63 +66,6 @@ describe('Servers', () => {
           properties: {
             servers: {
               minItems: 1,
-            },
-          },
-        },
-      },
-    });
-  });
-});
-
-describe('One of definitions', () => {
-  let schema: object;
-  const sut = patchOneOfReferences;
-
-  beforeEach(() => {
-    schema = {
-      definitions: {
-        Components: {
-          type: 'object',
-          properties: {
-            schemas: {
-              type: 'object',
-              patternProperties: {
-                '^[a-zA-Z0-9\\.\\-_]+$': {
-                  oneOf: [
-                    {
-                      $ref: '#/definitions/Reference',
-                    },
-                    {
-                      $ref: '#/definitions/Schema',
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        },
-      },
-    };
-  });
-
-  it('should have reference replaced', () => {
-    sut(schema);
-    console.log(JSON.stringify(schema, null, 2));
-    expect(schema).to.deep.equal({
-      definitions: {
-        Components: {
-          type: 'object',
-          properties: {
-            schemas: {
-              type: 'object',
-              patternProperties: {
-                '^[a-zA-Z0-9\\.\\-_]+$': {
-                  validateDefOrRef: {
-                    $data: '0',
-                  },
-                  validationSchema: '#/definitions/Schema',
-                },
-              },
             },
           },
         },
@@ -161,6 +104,63 @@ describe('Paths', () => {
             },
           },
           validatePaths: {},
+        },
+      },
+    });
+  });
+});
+
+describe('One of inlined type or reference', () => {
+  let schema: object;
+  const sut = patchOneOfReferences;
+
+  beforeEach(() => {
+    schema = {
+      definitions: {
+        Components: {
+          type: 'object',
+          properties: {
+            schemas: {
+              type: 'object',
+              patternProperties: {
+                '^[a-zA-Z0-9\\.\\-_]+$': {
+                  oneOf: [
+                    {
+                      $ref: '#/definitions/Reference',
+                    },
+                    {
+                      $ref: '#/definitions/Schema',
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+  });
+
+  it('should have reference replaced', () => {
+    sut(schema);
+    // console.log(JSON.stringify(schema, null, 2));
+    expect(schema).to.deep.equal({
+      definitions: {
+        Components: {
+          type: 'object',
+          properties: {
+            schemas: {
+              type: 'object',
+              patternProperties: {
+                '^[a-zA-Z0-9\\.\\-_]+$': {
+                  validateDefOrRef: {
+                    $data: '0',
+                  },
+                  validationSchema: '#/definitions/Schema',
+                },
+              },
+            },
+          },
         },
       },
     });
